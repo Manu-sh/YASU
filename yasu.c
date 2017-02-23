@@ -27,6 +27,14 @@
 
 #include "stroutcfg.h"
 
+/*	© Copyright 2017 Manu-sh s3gmentationfault@gmail.com
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License.
+	This program is distributed in the hope that it will be useful,	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	GNU General Public License for more details.
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
 #define BSIZE ETH_FRAME_LEN+2 // ETH_FRAME_LEN Max. octets in frame sans (without) FCS
 
 int socket_raw = -1;
@@ -77,18 +85,18 @@ void main(int argc, char *argv[]) {
 	setpromisc(&ifr, iface, &socket_raw);
 	logfile = fopen(FOPEN_STDLOG, "a");
 	output = fopen(FOPEN_STDOUT, "a");
-	
+
 	if (!logfile) {
 		fprintf(stderr, "err creating log file\n");
-		die(0);		
+		die(0);
 	}
 
 	if (!output) {
 		fprintf(stderr, "err opening default output file\n");
-		die(0);		
+		die(0);
 	}
 
-	while (1) { 
+	while (1) {
 		if (recvfrom(socket_raw, buf, BSIZE-2, 0, NULL, NULL) > 0) parse_ip_packets(buf);
 	}
 
@@ -127,8 +135,8 @@ void parse_ip_packets(char *buf) {
 	time_t unix_mseconds;
 	time(&unix_mseconds);
 
-	fprintf(output,  OUT_FINAL_REPORT, other_, tcp_, icmp_, udp_, ctime(&unix_mseconds)); 
-	fprintf(logfile, LOG_FINAL_REPORT, other_, tcp_, icmp_, udp_, ctime(&unix_mseconds)); 
+	fprintf(output,  OUT_FINAL_REPORT, other_, tcp_, icmp_, udp_, ctime(&unix_mseconds));
+	fprintf(logfile, LOG_FINAL_REPORT, other_, tcp_, icmp_, udp_, ctime(&unix_mseconds));
 }
 
 void print_ip_hdr(struct iphdr *ip) {
@@ -169,7 +177,7 @@ void print_ip_hdr(struct iphdr *ip) {
 	fprintf(logfile, LOG_IP_DST_IP, inet_ntoa(dest));
 }
 
-void print_tcp(char *buf, unsigned short *iphdrlen) { 
+void print_tcp(char *buf, unsigned short *iphdrlen) {
 
 	struct tcphdr *tcp = (struct tcphdr *)(buf + ethhdrlen + *iphdrlen);
 	unsigned short tcphdrlen = tcp->doff*4; // (word*4 = byte)
@@ -192,7 +200,7 @@ void print_tcp(char *buf, unsigned short *iphdrlen) {
 void print_udp(char *buf, unsigned short *iphdrlen) {
 
 	struct udphdr *udp = (struct udphdr *)(buf + ethhdrlen + *iphdrlen);
-	fprintf(output,  OUT_UDP_BEGIN);	
+	fprintf(output,  OUT_UDP_BEGIN);
 	fprintf(logfile, LOG_UDP_BEGIN);
 
 	fprintf(output,  OUT_UDP_SRC_PORT, ntohs(udp->source));
@@ -213,7 +221,7 @@ void print_udp(char *buf, unsigned short *iphdrlen) {
 void print_icmp(char *buf, unsigned short *iphdrlen) {
 
 	struct icmphdr *icmp = (struct icmphdr *)(buf + ethhdrlen + *iphdrlen);
-	fprintf(output,  OUT_ICMP_BEGIN);	
+	fprintf(output,  OUT_ICMP_BEGIN);
 	fprintf(logfile, LOG_ICMP_BEGIN);
 
 	fprintf(output,  OUT_ICMP_TYPE, icmp->type);
