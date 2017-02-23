@@ -1,5 +1,5 @@
 # YASU
-#### yet another sniffing utility
+###### yet another sniffing utility
 
 ### Configuration
 You can edit stroutcfg.h for control the output generated, for example, you may need to reduce the size of the logs
@@ -14,7 +14,7 @@ sudo make install
 ```
 
 
-### Basic usage (example)
+### Basic usage
 ```bash
 # only root can perform this, sudo or su -c can't do this
 echo 1 > /proc/sys/net/ipv4/ip_forward
