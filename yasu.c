@@ -41,9 +41,10 @@ int socket_raw = -1;
 
 // these header have a fixed size
 unsigned short ethhdrlen = sizeof(struct ethhdr);
-unsigned short inaddrlen = sizeof(struct in_addr);
 unsigned short udphdrlen = sizeof(struct udphdr);
 unsigned short icmphdrlen = sizeof(struct icmphdr);
+
+unsigned short inaddrlen = sizeof(struct in_addr);
 static long long other_, tcp_, icmp_, udp_, igmp_;
 
 FILE *logfile = NULL, *output = NULL;
