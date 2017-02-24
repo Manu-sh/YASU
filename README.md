@@ -1,9 +1,11 @@
 # YASU
 ###### yet another sniffing utility
+yasu take inspiration by suckless style and is not designed for users with no knowledge of C
+yasu is a simple and elementary utility that is written to be easy to understand
+and hackable.
 
 ### Configuration
-You can edit stroutcfg.h for control the output generated, for example, you may need to reduce the size of the logs
-
+You can edit stroutcfg.h for an easy control on the output generated, for example, you may need to reduce the size of the logs
 
 ### Installation
 ```bash
@@ -22,5 +24,6 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 GATEWAY=192.168.1.1 INTERFACE=wlp4s0 TARGET=192.168.1.254
 sudo arpspoof -i $INTERFACE -t $TARGET -r $GATEWAY
 
-sudo yasu
+# As default YASU use https://github.com/Manu-sh/YASU/blob/master/yasu.c#L74
+sudo yasu $INTERFACE
 ```
