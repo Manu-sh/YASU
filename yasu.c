@@ -40,7 +40,6 @@ bool isIp(char *ip);
 bool isPort(char *port);
 bool packet_filtr(Packet *p, Uflags *uf);
 
-unsigned short i, iplen = 0, maxblk = 0, lblk = 0, dots = 0, digits = 0;
 Uflags uf = { 0, NULL };
 
 /* 	RFC 791 ip protocol: https://tools.ietf.org/html/rfc791#page-11
