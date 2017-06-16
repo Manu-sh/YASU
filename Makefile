@@ -1,7 +1,7 @@
 #!/usr/bin/make
 
-CC=cc
-CFLAGS=-O3 -march=native -pipe
+CC := cc
+CFLAGS := -O3 -march=native -pipe
 .PHONY: clean install uninstall
 
 yasu: yasu.c packet.o types.h
