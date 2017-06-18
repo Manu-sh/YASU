@@ -1,11 +1,11 @@
 #include "packet.h"
 
 // these header have a fixed size (eth, udp, icmp)
-const static unsigned short ethhdrlen  = sizeof(struct ethhdr);
-const static unsigned short udphdrlen  = sizeof(struct udphdr);
-const static unsigned short icmphdrlen = sizeof(struct icmphdr);
+const static uint16_t ethhdrlen  = sizeof(struct ethhdr);
+const static uint16_t udphdrlen  = sizeof(struct udphdr);
+const static uint16_t icmphdrlen = sizeof(struct icmphdr);
 
-const static unsigned short inaddrlen  = sizeof(struct in_addr);
+const static uint16_t inaddrlen  = sizeof(struct in_addr);
 
 bool packet_init(char *buf, Packet *pk) {
 
@@ -60,9 +60,9 @@ bool packet_init(char *buf, Packet *pk) {
 
 }
 
-bool isPresentPayload(Packet *p, register char *buf, register unsigned short readed) {
+bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed) {
 
-	for (register unsigned short i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
+	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
 		if (buf[i] != '\0')
 			return TRUE;
 
@@ -71,10 +71,10 @@ bool isPresentPayload(Packet *p, register char *buf, register unsigned short rea
 }
 
 // header length to be skipped (in bytes), buf must to be null terminated
-void print_payload(Packet *p, register char *buf, register unsigned short readed) {
+void print_payload(Packet *p, register char *buf, register uint16_t readed) {
 
 	printf("Payload: ");
-	for (register unsigned short i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++) {
+	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++) {
 		if (isprint(buf[i]))
 			printf("%c", buf[i]);
 		else

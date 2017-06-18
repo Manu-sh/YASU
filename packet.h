@@ -32,5 +32,5 @@
 #endif
 
 bool packet_init(char *buf, Packet *pk);
-bool isPresentPayload(Packet *p, register char *buf, register unsigned short readed);
-void print_payload(Packet *p, register char *buf, register unsigned short readed);
+bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed);
+void print_payload(Packet *p, register char *buf, register uint16_t readed);
