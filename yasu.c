@@ -24,18 +24,19 @@
 #include <linux/icmp.h>
 #include <linux/igmp.h>
 #include <time.h>
+#include <stdint.h>
 
 #include "packet.h"
 
-int socket_raw = -1;
-long long other_, tcp_, icmp_, udp_, igmp_;
+uint32_t socket_raw = -1;
+uint64_t other_, tcp_, icmp_, udp_, igmp_;
 
-static void die (int i) {
+static void die (int32_t i) {
 	if (socket_raw >= 0) close(socket_raw);
 	exit(i);
 }
 
-void setpromisc(struct ifreq *ifr, const char *iface, int *socket);
+void setpromisc(struct ifreq *ifr, const char *iface, int32_t *socket);
 bool isIp(char *ip);
 bool isPort(char *port);
 bool packet_filtr(Packet *p, Uflags *uf);
@@ -60,8 +61,8 @@ int main(int argc, char *argv[]) {
 	char *target = NULL;
 	char buf[BSIZE] = "\0";
 	char *iface = NULL;
-	unsigned short readed;
-	int c, bytes;
+	uint16_t readed;
+	int32_t c, bytes;
 
 	struct ifreq ifr;
 	Packet pk;
@@ -84,7 +85,7 @@ int main(int argc, char *argv[]) {
 				printf("the target ip is %s\n", uf.target_ip);
 				break;
 			case 'p':
-				uf.port = isPort(optarg) ? (unsigned short)atol(optarg) : -1;
+				uf.port = isPort(optarg) ? (uint16_t)atol(optarg) : -1;
 				if (uf.port == -1) {
 					fprintf(stderr, "the port %d is not a valid port\n", uf.port);
 					die(EXIT_FAILURE);
@@ -128,7 +129,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-void setpromisc(struct ifreq *ifr, const char *iface, int *socket) {
+void setpromisc(struct ifreq *ifr, const char *iface, int32_t *socket) {
 
 	memset(ifr, 0, sizeof(struct ifreq));
 	strcpy(ifr->ifr_name, iface);
@@ -175,4 +176,4 @@ ctl_port:
 
 
 bool isIp(char *ip) { return (inet_addr(ip) != INADDR_NONE); }
-bool isPort(char *port) { return ((unsigned short)atol(optarg) > 0); }
+bool isPort(char *port) { return ((uint16_t)atol(optarg) > 0); }

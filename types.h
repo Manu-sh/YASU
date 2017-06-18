@@ -22,15 +22,15 @@ struct packet {
 	char ip_src[MAXLEN_IP+1];
 	char ip_dst[MAXLEN_IP+1];
 	char proto_name[10];
-	unsigned short port_src;
-	unsigned short port_dst;
-	unsigned short proto_num;
-	unsigned short ip_hdrlen;
-	unsigned short t_hdrlen; // trasported hdr len (tcp, udp etc...)
+	uint16_t port_src;
+	uint16_t port_dst;
+	uint16_t proto_num;
+	uint16_t ip_hdrlen;
+	uint16_t t_hdrlen; // trasported hdr len (tcp, udp etc...)
 };
 
 struct user_pfflags {
-	int port;
+	int32_t port;
 	char *target_ip;
 };
 
