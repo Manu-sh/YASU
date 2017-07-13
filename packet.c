@@ -19,8 +19,8 @@ bool packet_init(char *buf, Packet *pk) {
 		memcpy(&source.s_addr, &ip->saddr, sizeof(struct in_addr));
 		memcpy(&dest.s_addr, &ip->daddr, sizeof(struct in_addr));
 		strcpy(pk->proto_name, p->p_name);
-		strcpy(pk->ip_src, inet_ntoa(dest));
-		strcpy(pk->ip_dst, inet_ntoa(source));
+		strcpy(pk->ip_src, inet_ntoa(source));
+		strcpy(pk->ip_dst, inet_ntoa(dest));
 	}
 
 

@@ -19,4 +19,7 @@ GATEWAY=192.168.1.1 INTERFACE=wlp4s0 TARGET=192.168.1.254
 sudo arpspoof -i $INTERFACE -t $TARGET -r $GATEWAY
 
 sudo yasu -i $INTERFACE -t $TARGET -p $PORT
+
+# or if you want to see which packets pass on your machine you can simply type
+sudo yasu -i $INTERFACE
 ```
