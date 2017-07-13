@@ -3,9 +3,7 @@
 // these header have a fixed size (eth, udp, icmp)
 const static uint16_t ethhdrlen  = sizeof(struct ethhdr);
 const static uint16_t udphdrlen  = sizeof(struct udphdr);
-const static uint16_t icmphdrlen = sizeof(struct icmphdr);
-
-const static uint16_t inaddrlen  = sizeof(struct in_addr);
+// const static uint16_t icmphdrlen = sizeof(struct icmphdr);
 
 bool packet_init(char *buf, Packet *pk) {
 
@@ -46,10 +44,11 @@ bool packet_init(char *buf, Packet *pk) {
 		case IPPROTO_ICMP:
 
 			return FALSE; // ignore ICMP
+			/*
 			{
 				struct icmphdr *icmp = (struct icmphdr *)(buf + ethhdrlen + pk->ip_hdrlen);
 				pk->t_hdrlen = icmphdrlen;
-			}
+			}*/
 			break;
 		default:
 			return FALSE;

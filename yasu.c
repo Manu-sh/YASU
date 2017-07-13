@@ -28,8 +28,8 @@
 
 #include "packet.h"
 
-uint32_t socket_raw = -1;
-uint64_t other_, tcp_, icmp_, udp_, igmp_;
+int32_t socket_raw = -1;
+// uint32_t other_, tcp_, icmp_, udp_, igmp_;
 
 static void die (int32_t i) {
 	if (socket_raw >= 0) close(socket_raw);
@@ -58,11 +58,10 @@ Uflags uf = { 0, NULL };
 
 int main(int argc, char *argv[]) {
 
-	char *target = NULL;
 	char buf[BSIZE] = "\0";
 	char *iface = NULL;
 	uint16_t readed;
-	int32_t c, bytes;
+	int32_t c;
 
 	struct ifreq ifr;
 	Packet pk;
