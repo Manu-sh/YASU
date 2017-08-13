@@ -1,7 +1,10 @@
+#include <netinet/in.h>
+#include <errno.h>
+
 #define BSIZE ETH_FRAME_LEN+2 // ETH_FRAME_LEN Max. octets in frame sans (without) FCS
 
 #define MINLEN_IP 6
-#define MAXLEN_IP 14
+#define MAXLEN_IP INET_ADDRSTRLEN
 
 #define FALSE 0
 #define TRUE 1
@@ -15,8 +18,7 @@
 	#define EXIT_SUCCESS 0
 #endif
 
-#define WORD2BYTE(x) (x*4)
-#define S_FREE(x) free(x); x = NULL;
+#define WORD2BYTE(x) (x*4) // convert 32bit word 2 byte
 
 struct packet {
 	char ip_src[MAXLEN_IP+1];
@@ -36,3 +38,4 @@ struct user_pfflags {
 
 typedef struct packet Packet;
 typedef struct user_pfflags Uflags;
+extern int errno;

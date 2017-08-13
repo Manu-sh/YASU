@@ -29,14 +29,15 @@
 #include "packet.h"
 
 int32_t socket_raw = -1;
+
 // uint32_t other_, tcp_, icmp_, udp_, igmp_;
 
 static void die (int32_t i) {
-	if (socket_raw >= 0) close(socket_raw);
+	if (socket_raw != -1) close(socket_raw);
 	exit(i);
 }
 
-void setpromisc(struct ifreq *ifr, const char *iface, int32_t *socket);
+void setpromisc(struct ifreq *ifr, const char *iface, int32_t socket);
 bool isIp(char *ip);
 bool isPort(char *port);
 bool packet_filtr(Packet *p, Uflags *uf);
@@ -63,7 +64,7 @@ int main(int argc, char *argv[]) {
 	uint16_t readed;
 	int32_t c;
 
-	struct ifreq ifr;
+	struct ifreq ifr = {};
 	Packet pk;
 
 	signal(SIGINT, die);
@@ -100,14 +101,13 @@ int main(int argc, char *argv[]) {
 		die(EXIT_FAILURE);
 	}
 
-	printf("%s running on interface %s\n", argv[0], iface);
-
-	if ((socket_raw = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_IP))) < 0) {
-		fprintf(stderr, "err socket syscall, are you root ?\n");
+	if ((socket_raw = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_IP)))  == -1) {
+		fprintf(stderr, "err socket initialization: %s\n", strerror(errno));
 		die(EXIT_FAILURE);
 	}
 
-	setpromisc(&ifr, iface, &socket_raw);
+	setpromisc(&ifr, iface, socket_raw);
+	printf("%s running on interface %s\n", argv[0], iface);
 
 	while (1) {
 		if ((readed = recvfrom(socket_raw, buf, BSIZE-2, 0, NULL, NULL)) > 0) {
@@ -128,28 +128,28 @@ int main(int argc, char *argv[]) {
 }
 
 
-void setpromisc(struct ifreq *ifr, const char *iface, int32_t *socket) {
+void setpromisc(struct ifreq *ifr, const char *iface, int32_t socket) {
 
 	memset(ifr, 0, sizeof(struct ifreq));
 	strcpy(ifr->ifr_name, iface);
 
 	// SIOCGIFFLAGS => GET
-	if ((ioctl(*socket, SIOCGIFFLAGS, ifr)) == -1) {
-		fprintf(stderr, "err getting configurations from interface %s\n", iface);
+	if ((ioctl(socket, SIOCGIFFLAGS, ifr)) == -1) {
+		fprintf(stderr, "err getting configurations from interface %s: %s\n", iface, strerror(errno));
 		die(EXIT_FAILURE);
 	}
 
 	// SIOCSIFFLAGS => SET
 	ifr->ifr_flags |= IFF_PROMISC;
-	if ((ioctl(*socket, SIOCSIFFLAGS, ifr)) == -1) {
-		fprintf(stderr, "err setting promisc mode on interface %s\n", iface);
+	if ((ioctl(socket, SIOCSIFFLAGS, ifr)) == -1) {
+		fprintf(stderr, "err setting promisc mode on interface %s: %s\n", iface, strerror(errno));
 		die(EXIT_FAILURE);
 	}
 
 	if ((ifr->ifr_flags & IFF_PROMISC) != 0) {
 		printf("[*] %s promiscuos mode enabled\n", ifr->ifr_name);
 	} else {
-		fprintf(stderr, "err setting interface %s in promiscuos mode.\n", ifr->ifr_name);
+		fprintf(stderr, "err setting interface %s in promiscuos mode: %s.\n", ifr->ifr_name, strerror(errno));
 		die(EXIT_FAILURE);
 	}
 

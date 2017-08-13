@@ -1,9 +1,9 @@
 #include "packet.h"
 
 // these header have a fixed size (eth, udp, icmp)
-const static uint16_t ethhdrlen  = sizeof(struct ethhdr);
-const static uint16_t udphdrlen  = sizeof(struct udphdr);
-// const static uint16_t icmphdrlen = sizeof(struct icmphdr);
+const uint16_t ethhdrlen  = sizeof(struct ethhdr);
+const uint16_t udphdrlen  = sizeof(struct udphdr);
+// const uint16_t icmphdrlen = sizeof(struct icmphdr);
 
 bool packet_init(char *buf, Packet *pk) {
 
@@ -73,12 +73,9 @@ bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed) {
 void print_payload(Packet *p, register char *buf, register uint16_t readed) {
 
 	printf("Payload: ");
-	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++) {
-		if (isprint(buf[i]))
-			printf("%c", buf[i]);
-		else
-			printf(".");
-	}
+	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
+		printf("%c", isprint(buf[i]) ? buf[i] : '.');
+
 	printf("\n");
 
 }
