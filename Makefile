@@ -4,11 +4,8 @@ CC=cc
 CFLAGS=-O3 -march=native -pipe -Wall
 .PHONY: clean install uninstall
 
-yasu: yasu.c packet.o types.h
-	$(CC) $(CFLAGS) -o yasu packet.o yasu.c
-
-packet.o: packet.c packet.h types.h
-	$(CC) $(CFLAGS) -c packet.c
+yasu: yasu.c packets.h types.h
+	$(CC) $(CFLAGS) -o yasu yasu.c
 
 clean:
 	rm -vf yasu *.o

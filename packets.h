@@ -1,11 +1,57 @@
-#include "packet.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <signal.h>
+#include <ctype.h>
+#include <stropts.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <netinet/udp.h>
+#include <net/if.h>
+#include <net/ethernet.h>
+#include <linux/if_ether.h>
+#include <linux/if_packet.h>
+#include <linux/icmp.h>
+#include <linux/igmp.h>
+#include <time.h>
+
+#define PACKET_H
+
+#ifndef TYPES_H
+	#include "types.h"
+#endif
 
 // these header have a fixed size (eth, udp, icmp)
 const uint16_t ethhdrlen  = sizeof(struct ethhdr);
 const uint16_t udphdrlen  = sizeof(struct udphdr);
 // const uint16_t icmphdrlen = sizeof(struct icmphdr);
 
-bool packet_init(char *buf, Packet *pk) {
+static bool packet_init(char *buf, Packet *pk) {
+
+// TODO add macaddress to packet info
+#if 0
+	// https://stackoverflow.com/questions/31090616/printf-adds-extra-ffffff-to-hex-print-from-a-char-array
+	struct ethhdr *ethframe = (struct ethhdr *)buf;
+
+	for (int i = 0; i < ETH_ALEN; i++)
+		printf("%02X ", ethframe->h_dest[i]);
+	puts("");
+
+	for (int i = 0; i < ETH_ALEN; i++)
+		printf("%02X ", ethframe->h_source[i]);
+	puts("");
+#endif
+
 
 	memset(pk, 0, sizeof(Packet));
 
@@ -59,7 +105,7 @@ bool packet_init(char *buf, Packet *pk) {
 
 }
 
-bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed) {
+static bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed) {
 
 	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
 		if (buf[i] != '\0')
@@ -70,7 +116,7 @@ bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed) {
 }
 
 // header length to be skipped (in bytes), buf must to be null terminated
-void print_payload(Packet *p, register char *buf, register uint16_t readed) {
+static void print_payload(Packet *p, register char *buf, register uint16_t readed) {
 
 	printf("Payload: ");
 	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
