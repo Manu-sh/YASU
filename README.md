@@ -23,3 +23,4 @@ sudo yasu -i $INTERFACE -t $TARGET -p $PORT
 # or if you want to see which packets pass on your machine you can simply type
 sudo yasu -i $INTERFACE
 ```
+###### Copyright © 2017, [Manu-sh](https://github.com/Manu-sh), s3gmentationfaul@gmail.com. Released under the [GPL3 license](LICENSE).
