@@ -107,7 +107,7 @@ static bool packet_init(char *buf, Packet *pk) {
 
 static bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed) {
 
-	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
+	for (uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
 		if (buf[i] != '\0')
 			return TRUE;
 
@@ -119,7 +119,7 @@ static bool isPresentPayload(Packet *p, register char *buf, register uint16_t re
 static void print_payload(Packet *p, register char *buf, register uint16_t readed) {
 
 	printf("Payload: ");
-	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
+	for (uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
 		printf("%c", isprint(buf[i]) ? buf[i] : '.');
 
 	printf("\n");
