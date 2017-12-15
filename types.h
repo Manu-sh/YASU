@@ -1,5 +1,6 @@
 #include <netinet/in.h>
 #include <errno.h>
+#include <stdlib.h>
 
 #define BSIZE ETH_FRAME_LEN+2 // ETH_FRAME_LEN Max. octets in frame sans (without) FCS
 
