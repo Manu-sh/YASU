@@ -38,9 +38,9 @@ static void die (int32_t i) {
 }
 
 void setpromisc(struct ifreq *ifr, const char *iface, int32_t socket);
-bool isIp(char *ip);
-bool isPort(char *port);
-bool packet_filtr(Packet *p, Uflags *uf);
+bool packet_filtr(const Packet *p, Uflags *uf);
+bool isIp(const char *ip) { return (inet_addr(ip) != INADDR_NONE); }
+bool isPort(const char *port) { return ((uint16_t)atol(optarg) > 0); }
 
 Uflags uf = { 0, NULL };
 
@@ -155,7 +155,7 @@ void setpromisc(struct ifreq *ifr, const char *iface, int32_t socket) {
 
 }
 
-bool packet_filtr(Packet *p, Uflags *uf) {
+bool packet_filtr(const Packet *p, Uflags *uf) {
 
 	if (!uf->target_ip)
 		goto ctl_port;
@@ -174,5 +174,3 @@ ctl_port:
 }
 
 
-bool isIp(char *ip) { return (inet_addr(ip) != INADDR_NONE); }
-bool isPort(char *port) { return ((uint16_t)atol(optarg) > 0); }

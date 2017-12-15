@@ -36,7 +36,7 @@ const uint16_t ethhdrlen  = sizeof(struct ethhdr);
 const uint16_t udphdrlen  = sizeof(struct udphdr);
 // const uint16_t icmphdrlen = sizeof(struct icmphdr);
 
-static bool packet_init(char *buf, Packet *pk) {
+static bool packet_init(const char *buf, Packet *pk) {
 
 // TODO add macaddress to packet info
 #if 0
@@ -105,21 +105,20 @@ static bool packet_init(char *buf, Packet *pk) {
 
 }
 
-static bool isPresentPayload(Packet *p, register char *buf, register uint16_t readed) {
+static bool isPresentPayload(const Packet *p, const char *buf, uint16_t readed) {
 
-	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
+	for (uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
 		if (buf[i] != '\0')
 			return TRUE;
 
 	return FALSE;
-
 }
 
 // header length to be skipped (in bytes), buf must to be null terminated
-static void print_payload(Packet *p, register char *buf, register uint16_t readed) {
+static void print_payload(const Packet *p, const char *buf, uint16_t readed) {
 
 	printf("Payload: ");
-	for (register uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
+	for (uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
 		printf("%c", isprint(buf[i]) ? buf[i] : '.');
 
 	printf("\n");
