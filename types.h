@@ -20,7 +20,7 @@
 
 #define WORD2BYTE(x) (x*4) // convert 32bit word 2 byte
 
-struct packet {
+typedef struct {
 	char ip_src[MAXLEN_IP+1];
 	char ip_dst[MAXLEN_IP+1];
 	char proto_name[10];
@@ -29,13 +29,11 @@ struct packet {
 	uint16_t proto_num;
 	uint16_t ip_hdrlen;
 	uint16_t t_hdrlen; // trasported hdr len (tcp, udp etc...)
-};
+} Packet;
 
-struct user_pfflags {
+typedef struct {
 	int32_t port;
 	char *target_ip;
-};
+} Uflags;
 
-typedef struct packet Packet;
-typedef struct user_pfflags Uflags;
 extern int errno;
