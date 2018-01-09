@@ -52,6 +52,8 @@ static bool packet_init(const char *buf, Packet *pk) {
 	puts("");
 #endif
 
+// TODO use getprotoby* family, man getprotobynumber
+// getprotobynumber(IPPROTO_TCP)->pname (/etc/protocols)
 
 	memset(pk, 0, sizeof(Packet));
 
