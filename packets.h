@@ -116,7 +116,7 @@ static bool isPresentPayload(const Packet *p, const char *buf, uint16_t readed) 
 	return FALSE;
 }
 
-// header length to be skipped (in bytes), buf must to be null terminated
+// header length to be skipped (in bytes)
 static void print_payload(const Packet *p, const char *buf, uint16_t readed) {
 
 	printf("Payload: ");
