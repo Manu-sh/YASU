@@ -18,9 +18,9 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 GATEWAY=192.168.1.1 INTERFACE=wlp4s0 TARGET=192.168.1.254
 sudo arpspoof -i $INTERFACE -t $TARGET -r $GATEWAY
 
-sudo yasu -i $INTERFACE -t $TARGET -p $PORT
+sudo yasu -i $INTERFACE
 
 # or if you want to see which packets pass on your machine you can simply type
 sudo yasu -i $INTERFACE
 ```
-###### Copyright © 2017, [Manu-sh](https://github.com/Manu-sh), s3gmentationfault@gmail.com. Released under the [GPL3 license](LICENSE).
+###### Copyright © 2017-2018, [Manu-sh](https://github.com/Manu-sh), s3gmentationfault@gmail.com. Released under the [GPL3 license](LICENSE).

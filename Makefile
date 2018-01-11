@@ -1,10 +1,10 @@
 #!/usr/bin/make
 
-CC=cc
-CFLAGS=-O3 -march=native -pipe -Wall
+#CC=
+CFLAGS=-O3 -pipe -Wall -ffast-math -std=gnu99
 .PHONY: clean install uninstall
 
-yasu: yasu.c packets.h types.h
+yasu: yasu.c types.h
 	$(CC) $(CFLAGS) -o yasu yasu.c
 
 clean:

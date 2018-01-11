@@ -1,40 +1,25 @@
+#include <netdb.h>
 #include <netinet/in.h>
-#include <errno.h>
-#include <stdlib.h>
+#include <linux/if_ether.h>
 
-// ETH_FRAME_LEN Max. octets in frame sans (without) FCS
+#define DWORD2BYTE(x) (x*4)         /* convert 32bit word to byte */
 
-#define MINLEN_IP 6
-#define MAXLEN_IP INET_ADDRSTRLEN
-
-#define FALSE 0
-#define TRUE 1
-#define TYPES_H
-
-#ifndef EXIT_FAILURE
-	#define EXIT_FAILURE 1
-#endif
-
-#ifndef EXIT_SUCCESS
-	#define EXIT_SUCCESS 0
-#endif
-
-#define WORD2BYTE(x) (x*4) // convert 32bit word 2 byte
+/* ETH_ALEN: octets in one ethernet addr, defined into if_ether.h */
+#define MAC_ADDRSTRLEN (3*ETH_ALEN) /* XX:XX:XX:XX:XX:XX including null */
 
 typedef struct {
-	char ip_src[MAXLEN_IP+1];
-	char ip_dst[MAXLEN_IP+1];
-	char proto_name[10];
+
+	struct protoent *protocol;
+
+	char ip_src[INET_ADDRSTRLEN]; /* ip max length including null */
+	char ip_dst[INET_ADDRSTRLEN];
+
+	char mac_src[MAC_ADDRSTRLEN];
+	char mac_dst[MAC_ADDRSTRLEN];
+
 	uint16_t port_src;
 	uint16_t port_dst;
-	uint16_t proto_num;
-	uint16_t ip_hdrlen;
-	uint16_t t_hdrlen; // trasported hdr len (tcp, udp etc...)
-} Packet;
 
-typedef struct {
-	int32_t port;
-	char *target_ip;
-} Uflags;
+	uint16_t t_hdrlen;  /* trasported hdr len (tcp, udp etc...) */
 
-extern int errno;
+} YasuIpv4;
