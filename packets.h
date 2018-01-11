@@ -107,15 +107,6 @@ static bool packet_init(const char *buf, Packet *pk) {
 
 }
 
-static bool isPresentPayload(const Packet *p, const char *buf, uint16_t readed) {
-
-	for (uint16_t i = (ethhdrlen + p->ip_hdrlen + p->t_hdrlen); i < readed; i++)
-		if (buf[i] != '\0')
-			return TRUE;
-
-	return FALSE;
-}
-
 // header length to be skipped (in bytes)
 static void print_payload(const Packet *p, const char *buf, uint16_t readed) {
 

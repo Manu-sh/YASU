@@ -59,7 +59,7 @@ Uflags uf = { 0, NULL };
 
 int main(int argc, char *argv[]) {
 
-	char buf[BSIZE] = "\0";
+	char buf[ETH_FRAME_LEN] = "\0";
 	char *iface = NULL;
 	uint16_t readed;
 	int32_t c;
@@ -110,8 +110,8 @@ int main(int argc, char *argv[]) {
 	printf("%s running on interface %s\n", argv[0], iface);
 
 	while (1) {
-		if ((readed = recvfrom(socket_raw, buf, BSIZE-2, 0, NULL, NULL)) > 0) {
-			if (packet_init(buf, &pk) && packet_filtr(&pk, &uf) && isPresentPayload(&pk, buf, readed)) {
+		if ((readed = recvfrom(socket_raw, buf, ETH_FRAME_LEN, 0, NULL, NULL)) > 0) {
+			if (packet_init(buf, &pk) && packet_filtr(&pk, &uf)) {
 				printf("protocol name: %s\n", pk.proto_name);
 				printf("protocol num: %hu\n", pk.proto_num);
 				printf("src ip: %s\n", pk.ip_src);

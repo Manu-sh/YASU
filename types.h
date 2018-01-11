@@ -2,7 +2,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#define BSIZE ETH_FRAME_LEN+2 // ETH_FRAME_LEN Max. octets in frame sans (without) FCS
+// ETH_FRAME_LEN Max. octets in frame sans (without) FCS
 
 #define MINLEN_IP 6
 #define MAXLEN_IP INET_ADDRSTRLEN
