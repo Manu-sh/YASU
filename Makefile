@@ -4,7 +4,7 @@
 CFLAGS=-O3 -pipe -Wall -ffast-math -std=gnu99
 .PHONY: clean install uninstall
 
-yasu: yasu.c types.h
+yasu: yasu.c types.h utils.h
 	$(CC) $(CFLAGS) -o yasu yasu.c
 
 clean:
