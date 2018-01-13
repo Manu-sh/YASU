@@ -27,6 +27,5 @@ typedef struct {
 	uint16_t ip_hdrlen;
 	uint16_t t_hdrlen;  /* trasported hdr len (tcp, udp etc...) */
 
-} YasuIpv4;
-
+} YasuPacket;
 

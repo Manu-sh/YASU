@@ -53,6 +53,7 @@ int32_t socket_raw = -1;
 
 /* these header have a fixed size */
 const uint16_t ethhdrlen = sizeof(struct ethhdr);
+const uint16_t udphdrlen = sizeof(struct udphdr);
 
 static void close_rawsk()
 { if (socket_raw != -1) close(socket_raw); }
@@ -75,9 +76,7 @@ static bool setpromisc(struct ifreq *ifr, const char *ifname, int32_t socket) {
 	return ifr->ifr_flags & IFF_PROMISC;
 }
 
-
-
-static bool packet_init(const char *buf, YasuIpv4 *p, int32_t readed) {
+static bool packet_init(const char *buf, YasuPacket *p, int32_t readed) {
 
 	struct ethhdr *ethframe = (struct ethhdr *)buf;
 	struct iphdr *ip = (struct iphdr *)(buf + ethhdrlen); /* skip ethframe */
@@ -198,10 +197,6 @@ static bool packet_init(const char *buf, YasuIpv4 *p, int32_t readed) {
 			}
 			break;
 		case IPPROTO_UDP:
-
-			return false; /* discard for now */
-
-			/*
 			{
 				struct udphdr *udp = (struct udphdr *)(buf + ethhdrlen + p->ip_hdrlen);
 				p->t_hdrlen = udphdrlen;
@@ -209,17 +204,15 @@ static bool packet_init(const char *buf, YasuIpv4 *p, int32_t readed) {
 				p->port_src = ntohs(udp->source);
 			}
 			break;
-			*/
 		case IPPROTO_ICMP:
-
 			return false; /* ignore ICMP */
 			/*
-			 {
+			{
 				struct icmphdr *icmp = (struct icmphdr *)(buf + ethhdrlen + p->ip_hdrlen);
 				p->t_hdrlen = icmphdrlen;
 			}
-			break;
 			*/
+			break;
 		default: /* discard any other things */
 			return false;
 	}
@@ -227,11 +220,12 @@ static bool packet_init(const char *buf, YasuIpv4 *p, int32_t readed) {
 	return true;
 }
 
-static inline bool packet_payload_isEmpty(const YasuIpv4 *p, uint16_t readed) {
+static inline bool packet_payload_isEmpty(const YasuPacket *p, uint16_t readed) {
 	return ethhdrlen + p->ip_hdrlen + p->t_hdrlen == readed;
 }
 
-static void packet_payload_print(const YasuIpv4 *p, const char *buf, uint16_t readed) {
+/* print payload in hexdump style */
+static void packet_payload_print(const YasuPacket *p, const char *buf, uint16_t readed) {
 
 #define CHUNK 24
 	printf("Payload:\n");
@@ -260,7 +254,7 @@ static void packet_payload_print(const YasuIpv4 *p, const char *buf, uint16_t re
 
 int main(int argc, char *argv[]) {
 
-	YasuIpv4 pk;
+	YasuPacket pk;
 	struct ifreq ifr;
 	uint16_t readed;
 	char buf[ETHER_MAX_LEN]; /* max MTU: 1500 */
@@ -293,7 +287,9 @@ int main(int argc, char *argv[]) {
 	printf("%s running on interface %s\n", argv[0], argv[2]);
 
 	// sudo hping3 -a 192.178.0.0 192.168.1.1 -p 1111 -d 10
+
 	// TODO reassemble ip fragments ?
+	// TODO checksum
 
 	while (1) {
 		if ((readed = recvfrom(socket_raw, buf, ETH_FRAME_LEN, 0, NULL, NULL)) > 0) {
