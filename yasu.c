@@ -185,7 +185,7 @@ static bool packet_init(const char *buf, YasuPacket *p, int32_t readed) {
 				/* ATTENTION we use these value as an index but they are size so attention to don't exceed ETHER_MAX_LEN
 				the size of buffer */
 
-				assert((readed - ethhdrlen - p->ip_hdrlen) < ETHER_MAX_LEN);
+				assert((ethhdrlen + p->ip_hdrlen + p->t_hdrlen) < ETHER_MAX_LEN);
 
 				// TODO check for malformed DOFF
 
