@@ -14,6 +14,7 @@
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
+#include <linux/filter.h>
 
 #include <net/ethernet.h>
 #include <linux/if_ether.h>
@@ -30,9 +31,12 @@
 #include "types.h"
 #include "utils.h"
 
+#undef NDEBUG
 
+#define ANSI_SHOW_CUR "\033[?25h"
+#define ANSI_HIDE_CUR "\033[?25l"
 
-/* 	RFC 791 ip protocol: https://tools.ietf.org/html/rfc791#page-11
+/* 	RFC 791 ip protocol:  https://tools.ietf.org/html/rfc791#page-11
 	RFC 793 tcp protocol: https://tools.ietf.org/html/rfc793#page-15
 	RFC 768 udp protocol: https://tools.ietf.org/html/rfc768 */
 
@@ -56,7 +60,7 @@ const uint16_t ethhdrlen = sizeof(struct ethhdr);
 const uint16_t udphdrlen = sizeof(struct udphdr);
 
 static void close_rawsk()
-{ if (socket_raw != -1) close(socket_raw); }
+{ if (socket_raw != -1) close(socket_raw); printf(ANSI_SHOW_CUR); }
 
 /* TODO should i reset the original setting before exit() */
 static bool setpromisc(struct ifreq *ifr, const char *ifname, int32_t socket) {
@@ -231,8 +235,10 @@ static void packet_payload_print(const YasuPacket *p, const char *buf, uint16_t 
 	printf("Payload:\n");
 	for (int i = ethhdrlen + p->ip_hdrlen + p->t_hdrlen, n; i < readed; i+=CHUNK) {
 
-		n = (CHUNK > readed-i ? readed-i : CHUNK); fprintf(stdout, "| ");
+		n = (CHUNK > readed-i ? readed-i : CHUNK); 
 
+		// fprintf(stdout, " %08x | ", i - ethhdrlen - p->ip_hdrlen - p->t_hdrlen);
+		fprintf(stdout, "| ");
 		displayChunk(buf+i, n >> 1, HEX, stdout);
 		for (int j = n >> 1; j < CHUNK >> 1; j++) fprintf(stdout, "%-3c", ' '); /* padding */
 
@@ -284,12 +290,39 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	printf("%s running on interface %s\n", argv[0], argv[2]);
+
+#if 0
+	// possible fix for ipv6 bug, i can't reproduce it, apparently disappeared
+
+	/* ipv4 only, https://www.kernel.org/doc/Documentation/networking/filter.txt */
+	struct sock_filter code[] = { 
+
+		{ 0x28, 0, 0, 0x0000000c },
+		{ 0x15, 0, 1, 0x00000800 },
+		{ 0x6,  0, 0, 0x00040000 },
+		{ 0x6,  0, 0, 0x00000000 }
+	};
+
+
+	struct sock_fprog bpf = {
+		.len = (sizeof code / sizeof(struct sock_filter)),
+		.filter = code,
+	};
+
+	if (setsockopt(socket_raw, SOL_SOCKET, SO_ATTACH_FILTER, &bpf, sizeof(struct sock_fprog)) != 0) {
+		fprintf(stderr, "err TODO: %s\n", strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+#endif
+
+	printf(ANSI_HIDE_CUR);
+	printf("%s running on interface %s [*]\n", argv[0], argv[2]);
 
 	// sudo hping3 -a 192.178.0.0 192.168.1.1 -p 1111 -d 10
 
 	// TODO reassemble ip fragments ?
-	// TODO checksum
+	// TODO checksum ?
+	// TODO timestamp ?
 
 	while (1) {
 		if ((readed = recvfrom(socket_raw, buf, ETH_FRAME_LEN, 0, NULL, NULL)) > 0) {
@@ -309,7 +342,7 @@ int main(int argc, char *argv[]) {
 
 				printf("src mac: %s\n", pk.mac_src);
 				printf("dst mac: %s\n", pk.mac_dst);
-				
+
 				packet_payload_print(&pk, buf, readed);
 				fflush(stdout);
 			}
