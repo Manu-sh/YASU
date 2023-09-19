@@ -157,8 +157,11 @@ static bool packet_init(const char *buf, YasuPacket *p, int32_t readed) {
 		source.s_addr = ip->saddr;
 		dest.s_addr   = ip->daddr;
 
-		strncpy(p->ip_src, inet_ntoa(source), INET_ADDRSTRLEN);
-		strncpy(p->ip_dst, inet_ntoa(dest), INET_ADDRSTRLEN);
+		#pragma GCC diagnostic push
+		#pragma GCC diagnostic ignored "-Wstringop-truncation"
+			strncpy(p->ip_src, inet_ntoa(source), INET_ADDR_SIZE);
+			strncpy(p->ip_dst, inet_ntoa(dest), INET_ADDR_SIZE);
+		#pragma GCC diagnostic pop
 	}
 
 	switch (ip->protocol) {

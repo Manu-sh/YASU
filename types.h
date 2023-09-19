@@ -11,12 +11,14 @@ should be replace with a constant if it don't do this doesn't matter */
 /* ETH_ALEN: octets in one ethernet addr, defined into if_ether.h */
 #define MAC_ADDRSTRLEN (3*ETH_ALEN) /* XX:XX:XX:XX:XX:XX including null */
 
+#define INET_ADDR_SIZE  (INET_ADDRSTRLEN+1)
+
 typedef struct {
 
 	struct protoent *protocol;
 
-	char ip_src[INET_ADDRSTRLEN]; /* ip max length including null */
-	char ip_dst[INET_ADDRSTRLEN];
+	char ip_src[INET_ADDR_SIZE]; /* ip max length including null */
+	char ip_dst[INET_ADDR_SIZE];
 
 	char mac_src[MAC_ADDRSTRLEN];
 	char mac_dst[MAC_ADDRSTRLEN];

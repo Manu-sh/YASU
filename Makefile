@@ -1,7 +1,7 @@
 #!/usr/bin/make
 
 #CC=
-CFLAGS=-O3 -pipe -Wall -ffast-math -std=gnu99
+CFLAGS=-O3 -pipe -Wall -ffast-math -std=gnu99 #-march=native -mtune=native
 .PHONY: clean install uninstall
 
 yasu: yasu.c types.h utils.h
