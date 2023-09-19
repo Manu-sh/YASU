@@ -9,9 +9,9 @@ should be replace with a constant if it don't do this doesn't matter */
 #define DWORD2BYTE(x) (x*4) /* convert 32bit word to byte */
 
 /* ETH_ALEN: octets in one ethernet addr, defined into if_ether.h */
-#define MAC_ADDRSTRLEN (3*ETH_ALEN) /* XX:XX:XX:XX:XX:XX including null */
+#define MAC_ADDRSTRLEN (3*ETH_ALEN+1) /* XX:XX:XX:XX:XX:XX including null */
 
-#define INET_ADDR_SIZE  (INET_ADDRSTRLEN+1)
+#define INET_ADDR_SIZE  (INET_ADDRSTRLEN+1) /* 255.255.255.255 including null */
 
 typedef struct {
 
