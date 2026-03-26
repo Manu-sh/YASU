@@ -12,7 +12,7 @@ sudo make install
 ```
 ### Basic usage
 ```bash
-# only root can perform this, sudo or su -c can't do this
+# only root can perform this, sudo or su -c can't do this (enable routing for NAT & Traffic forwarding)
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
 GATEWAY=192.168.1.1 INTERFACE=wlp4s0 TARGET=192.168.1.254
