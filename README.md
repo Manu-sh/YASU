@@ -12,10 +12,13 @@ sudo make install
 ```
 ### Basic usage
 ```bash
-# only root can perform this, sudo or su -c can't do this (enable routing for NAT & Traffic forwarding)
+# only root can perform this, sudo or su -c can't do this
+# enable IP forwarding via kernel to allow NAT & traffic forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
 GATEWAY=192.168.1.1 INTERFACE=wlp4s0 TARGET=192.168.1.254
+
+# act as a router using NAT
 
 # enable NAT: replace the outgoing packet ip sniffed with the sniffer ip
 sudo iptables -t nat -A POSTROUTING -o $INTERFACE -j MASQUERADE
